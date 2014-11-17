@@ -15,19 +15,26 @@ object Cityscape {
     case head :: thorax :: tail =>
       val sum = head fragment thorax
       val (left, right) = sum.partition(_.right <= thorax.left)
-      shred(shredded ++ left, (right ++ tail).sorted)
-    case _ =>
-      (shredded ++ blocks).toList
+      shred(shredded ++ left, sortedZip(right, tail))
+    case _ => (shredded ++ blocks).toList
   }
 
   @tailrec private def merge(merged: List[Block], blocks: List[Block]): List[Block] = blocks match {
     case head :: thorax :: tail if head.height == thorax.height =>
       merge(merged, head.copy(right = thorax.right) :: tail)
-    case head :: tail if head.left == head.right =>
-      merge(merged, tail)
-    case head :: tail =>
-      merge(head :: merged, tail)
-    case Nil =>
-      merged.reverse
+    case head :: tail if head.left == head.right => merge(merged, tail)
+    case head :: tail => merge(head :: merged, tail)
+    case Nil => merged.reverse
+  }
+
+  private def sortedZip(left: List[Block], right: List[Block]): List[Block] = (left, right) match {
+    case (leftHead :: leftTail, rightHead :: rightTail) =>
+      if (leftHead.left < rightHead.left)
+        leftHead :: sortedZip(leftTail, right)
+      else
+        rightHead :: sortedZip(left, rightTail)
+    case (_, Nil) => left
+    case (Nil, _) => right
+    case (Nil, Nil) => Nil
   }
 }

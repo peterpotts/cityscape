@@ -19,8 +19,7 @@ object Canvas {
     case thorax :: tail =>
       val points = Point(thorax.left, thorax.height) :: Point(thorax.right, thorax.height) :: trace(thorax, tail)
       if (head.right < thorax.left) Point(head.right, 0) :: Point(thorax.left, 0) :: points else points
-    case Nil =>
-      Point(head.right, 0) :: Nil
+    case Nil => Point(head.right, 0) :: Nil
   }
 }
 
