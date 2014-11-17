@@ -12,17 +12,17 @@ object Cityscape {
   private def merge(blocks: List[Block]): List[Block] = merge(Nil, blocks)
 
   @tailrec private def shred(shredded: Vector[Block], blocks: List[Block]): List[Block] = blocks match {
-    case first :: second :: tail =>
-      val sum = first fragment second
-      val (left, right) = sum.partition(_.right <= second.left)
+    case head :: thorax :: tail =>
+      val sum = head fragment thorax
+      val (left, right) = sum.partition(_.right <= thorax.left)
       shred(shredded ++ left, (right ++ tail).sorted)
     case _ =>
       (shredded ++ blocks).toList
   }
 
   @tailrec private def merge(merged: List[Block], blocks: List[Block]): List[Block] = blocks match {
-    case first :: second :: tail if first.height == second.height =>
-      merge(merged, first.copy(right = second.right) :: tail)
+    case head :: thorax :: tail if head.height == thorax.height =>
+      merge(merged, head.copy(right = thorax.right) :: tail)
     case head :: tail if head.left == head.right =>
       merge(merged, tail)
     case head :: tail =>
