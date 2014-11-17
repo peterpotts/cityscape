@@ -35,6 +35,5 @@ object Cityscape {
         rightHead :: sortedZip(left, rightTail)
     case (_, Nil) => left
     case (Nil, _) => right
-    case (Nil, Nil) => Nil
   }
 }
